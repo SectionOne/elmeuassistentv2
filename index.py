@@ -123,6 +123,11 @@ def inDialog():
     if isContain(stringInput, ["hola " + BOTNAME, "ayudame " + BOTNAME, BOTNAME], debug=False):
         state['dialog'] = True  # Iniciar conversació
 
+# Sequencia de sortida de la conversació
+def outDialog():
+    speak(f"Encantada de haberte ayudado. Si necesitas algo más, solo tienes que llamarme {BOTNAME}.")
+    byeBye()
+
 # Programa principal
 while True:
     #Control de si s'ha iniciat conversació o no
@@ -137,8 +142,10 @@ while True:
         else:
             # Procés de despedida per inactivitat
             if state['inactivity'] < inactivityMax:
+                speak("¿En qué más puedo ayudarte?")
                 state['inactivity'] += 1  # Incrementar el comptador d'inactivitat
             else:
+                outDialog()  # Sortir de la conversa per inactivitat
                 state['inactivity'] = 0  # Reiniciar el comptador d'inactivitat
         print("Fi de cicle", state['inactivity'])  # Missatge de despedida
     else:
