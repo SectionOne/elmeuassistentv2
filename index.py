@@ -2,6 +2,14 @@
 import json
 import pyaudio
 import vosk
+import pyttsx3
+
+# Inicialitzar el motor de síntesi de veu
+engine = pyttsx3.init('sapi5')
+engine.setProperty('rate', 120)  # Velocitat de la parla
+engine.setProperty('voice', 'spanish')  # Idioma: espanyol
+engine.say("Hola buenos dias. En que te puedo ayudar?")  # Missatge inicial
+engine.runAndWait()  # Esperar a que acabi de parlar
 
 def listen():
     """Funció per escoltar audio del micròfon i reconèixer la parla amb VOSK"""
