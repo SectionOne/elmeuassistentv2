@@ -5,6 +5,8 @@ import vosk
 import pyttsx3
 import re
 
+USERNAME = "Usuario"
+BOTNAME = "laura"
 inactivity = 0
 greet = False
 dialog = False
@@ -13,6 +15,7 @@ dialog = False
 engine = pyttsx3.init('sapi5')
 engine.setProperty('rate', 120)  # Velocitat de la parla
 engine.setProperty('voice', 'spanish')  # Idioma: espanyol
+engine.setProperty('volume', 1.0)  # Volum màxim
 
 def speak(text):
     engine.say(text)  # Missatge personalitzat
@@ -40,6 +43,19 @@ def listen():
             stream.close()  # Tancar el flux
             p.terminate()  # Finalitzar PyAudio
             return result  # Retornar el text reconegut
+        
+def greet_user():
+    """Funció per saludar l'usuari segons l'hora del dia"""
+    from datetime import datetime
+    hour = datetime.now().hour
+    if 0 <= hour < 12:
+        speak(f"Buenos días {USERNAME}")
+    elif 12 <= hour < 18:
+        speak(f"Buenas tardes {USERNAME}")
+    else:
+        speak(f"Buenas noches {USERNAME}")
+    speak(f"Soy {BOTNAME}, tu asistente virtual. ¿En qué puedo ayudarte hoy?")
+    greet = True
 
 def listenToText():
     """Funció per convertir l'audio reconegut a text i extreure només el text"""
@@ -90,14 +106,15 @@ def isContain(textInput, seeds, debug=False):
 def inDialog():
     global dialog
     stringInput = listenToText()  # Escoltar i obtenir el text reconegut
-    if isContain(stringInput, ["hola laura", "ayudame laura", "laura"], debug=True):
+    if isContain(stringInput, ["hola " + BOTNAME, "ayudame " + BOTNAME, BOTNAME], debug=True):
         dialog = True  # Iniciar conversació
 
 # Programa principal
 while True:
     #Control de si s'ha iniciat conversació o no
     if dialog:
-        speak("Hola buenos dias. Enque te puedo ayudar?")  # Missatge de benvinguda
+        # Validació de la salutació
+        if inactivity == 0 and not greet: greet_user()  # Saludar l'usuari si no s'ha fet encara
         print(listenToText())  # Escolta i mostra el text reconegut
         print("Fi de cicle")  # Missatge de despedida
     else:
