@@ -46,6 +46,7 @@ def listen():
         
 def greet_user():
     """Funció per saludar l'usuari segons l'hora del dia"""
+    global greet  # Accedir a la variable global greet
     from datetime import datetime
     hour = datetime.now().hour
     if 0 <= hour < 12:
@@ -106,7 +107,7 @@ def isContain(textInput, seeds, debug=False):
 def inDialog():
     global dialog
     stringInput = listenToText()  # Escoltar i obtenir el text reconegut
-    if isContain(stringInput, ["hola " + BOTNAME, "ayudame " + BOTNAME, BOTNAME], debug=True):
+    if isContain(stringInput, ["hola " + BOTNAME, "ayudame " + BOTNAME, BOTNAME], debug=False):
         dialog = True  # Iniciar conversació
 
 # Programa principal
@@ -115,7 +116,11 @@ while True:
     if dialog:
         # Validació de la salutació
         if inactivity == 0 and not greet: greet_user()  # Saludar l'usuari si no s'ha fet encara
-        print(listenToText())  # Escolta i mostra el text reconegut
+        stringInput = listenToText()  # Escolta el text reconegut
+
+        if isContain(stringInput, ["adiós","adiós " + BOTNAME, "hasta luego", "hasta luego " + BOTNAME, "gracias " + BOTNAME, "para " + BOTNAME], debug=True):
+            print("Fi de conversa per comanda de l'usuari")
+            continue # Situarem el continue per tornar a la següent iteració del bucle principal
         print("Fi de cicle")  # Missatge de despedida
     else:
         print("In StandBy")
