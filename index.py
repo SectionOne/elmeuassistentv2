@@ -4,6 +4,7 @@ import pyaudio
 import vosk
 import pyttsx3
 import re
+from datetime import datetime
 
 USERNAME = "Usuario"
 BOTNAME = "laura"
@@ -47,7 +48,6 @@ def listen():
 def greet_user():
     """Funció per saludar l'usuari segons l'hora del dia"""
     global greet  # Accedir a la variable global greet
-    from datetime import datetime
     hour = datetime.now().hour
     if 0 <= hour < 12:
         speak(f"Buenos días {USERNAME}")
@@ -57,6 +57,18 @@ def greet_user():
         speak(f"Buenas noches {USERNAME}")
     speak(f"Soy {BOTNAME}, tu asistente virtual. ¿En qué puedo ayudarte hoy?")
     greet = True
+
+def byeBye():
+    """Funció per acomiadar-se de l'usuari"""
+    global greet,dialog
+    hour = datetime.now().hour
+    if hour >= 21 or hour < 6:
+        speak(f"Buenas noches {USERNAME}, que descanses.")
+    else:
+        speak(f"Adiós {USERNAME}, hasta luego.")
+        print(hour)
+    greet = False
+    dialog = False
 
 def listenToText():
     """Funció per convertir l'audio reconegut a text i extreure només el text"""
@@ -120,6 +132,7 @@ while True:
 
         if isContain(stringInput, ["adiós","adiós " + BOTNAME, "hasta luego", "hasta luego " + BOTNAME, "gracias " + BOTNAME, "para " + BOTNAME], debug=True):
             print("Fi de conversa per comanda de l'usuari")
+            byeBye()  # Acomiadar-se de l'usuari
             continue # Situarem el continue per tornar a la següent iteració del bucle principal
         print("Fi de cicle")  # Missatge de despedida
     else:
