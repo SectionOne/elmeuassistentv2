@@ -4,6 +4,10 @@ import pyaudio
 import vosk
 import pyttsx3
 
+inactivity = 0
+greet = False
+dialog = False
+
 # Inicialitzar el motor de síntesi de veu
 engine = pyttsx3.init('sapi5')
 engine.setProperty('rate', 120)  # Velocitat de la parla
@@ -47,6 +51,11 @@ def listenToText():
 
 
 # Programa principal
-speak("Hola buenos dias. Enque te puedo ayudar?")  # Missatge de benvinguda
-print("Resultat:", listenToText())  # Escolta i mostra el text reconegut
-print("Hola Clase que tal?")  # Missatge de despedida
+while True:
+    #Control de si s'ha iniciat conversació o no
+    if dialog:
+        speak("Hola buenos dias. Enque te puedo ayudar?")  # Missatge de benvinguda
+        print(listenToText())  # Escolta i mostra el text reconegut
+        print("Fi de cicle")  # Missatge de despedida
+    else:
+        print("In StandBy")
