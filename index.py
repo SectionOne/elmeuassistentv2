@@ -3,6 +3,7 @@ import json
 import pyaudio
 import vosk
 import pyttsx3
+import re
 
 inactivity = 0
 greet = False
@@ -49,6 +50,48 @@ def listenToText():
     except:
         return c  # Si hi ha error, retornar el resultat original
 
+# Funció per observar si un string es troba a una llista
+def isContain(textInput, seeds, debug=False):
+    """Comprovar si algun element de 'seeds' està contingut en 
+    'textInput' i retorna True si troba alguna coincidència."""
+    # Validació d'entrada
+    if not textInput or not seeds:
+        if debug:
+            print(f"Debug isContain: textInput o seeds buits - textInput: '{textInput}', seeds: {seeds}")
+            return False
+    # Normalitzar el text d'entrada: minuscules, eliminar espais extra i netejar
+    textInput_str = str(textInput).strip()
+    # Normalitzar espais multiples a un sol espai
+    textInput_normalized = re.sub(r'\s+', ' ', textInput_str)
+    textInput_lower = textInput_normalized.lower()
+
+    if debug:
+        print(f"Debug isContain: textInput normalitzat - '{textInput_lower}'")
+        print(f"Debug isContain: seeds - {seeds}")
+
+    # Comprovar si algun element de seeds està contingut en textInput
+    # Retorna True en la primera coincidència trobada
+    for seed in seeds:
+        if seed:
+            seed_str = str(seed).strip().lower()
+            
+            # Trobar la seed en el text normalitzat
+            found = seed_str in textInput_lower
+            if debug:
+                print(f"Debug isContain: Comprovant seed '{seed_str}' - Trobat: {found}")
+            if found:
+                return True
+    
+    if debug:
+        print("Debug isContain: No s'ha trobat cap coincidència.")
+    return False
+
+# Sequencia d'entrada en conversació
+def inDialog():
+    global dialog
+    stringInput = listenToText()  # Escoltar i obtenir el text reconegut
+    if isContain(stringInput, ["hola laura", "ayudame laura", "laura"], debug=True):
+        dialog = True  # Iniciar conversació
 
 # Programa principal
 while True:
@@ -59,3 +102,4 @@ while True:
         print("Fi de cicle")  # Missatge de despedida
     else:
         print("In StandBy")
+        inDialog()  # Esperar a que s'iniciï la conversa
