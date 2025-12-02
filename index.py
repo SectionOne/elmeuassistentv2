@@ -6,7 +6,7 @@ import pyttsx3
 import re
 from datetime import datetime
 from functions.os_ops import openCalculator, openDiscord, openVSCode
-from functions.online_ops import searchOnGoogle
+from functions.online_ops import searchOnGoogle, playOnYouTube
 
 USERNAME = "Usuario"
 BOTNAME = "laura"
@@ -149,7 +149,7 @@ def actions(stringInput):
     elif isContain(stringInput, ["abre visual studio code", "abre vscode", "abre el code", "visual studio code", "vscode", "code", "visual studio"], debug=False):
         speak("Abriendo Visual Studio Code.")
         openVSCode()
-    elif isContain(stringInput, ["busca en google", "busca en internet", "haz una búsqueda", "búscalo en google", "búscalo en internet", "google"], debug=True):
+    elif isContain(stringInput, ["busca en google", "busca en internet", "haz una búsqueda", "búscalo en google", "búscalo en internet", "google"], debug=False):
         speak("¿Qué quieres que busque en Google?")
         query = listenToText()
         if query:
@@ -157,6 +157,14 @@ def actions(stringInput):
             searchOnGoogle(query)
         else:
             speak("No he entendido tu solicitud de búsqueda.")
+    elif isContain(stringInput, ["reproduce en youtube", "pon un video en youtube", "busca un video en youtube", "youtube"], debug=True):
+        speak("¿Qué video quieres que reproduzca en YouTube?")
+        video_name = listenToText()
+        if video_name:
+            speak(f"Reproduciendo {video_name} en YouTube.")
+            playOnYouTube(video_name)
+        else:
+            speak("No he entendido tu solicitud de video.")
     else:
         speak("Lo siento, no he entendido tu solicitud.")
 
