@@ -6,6 +6,7 @@ import pyttsx3
 import re
 from datetime import datetime
 from functions.os_ops import openCalculator, openDiscord, openVSCode
+from functions.online_ops import searchOnGoogle
 
 USERNAME = "Usuario"
 BOTNAME = "laura"
@@ -145,9 +146,17 @@ def actions(stringInput):
     elif isContain(stringInput, ["abre discord", "abre el discord", "abre discord por favor", "discord"], debug=False):
         speak("Abriendo Discord.")
         openDiscord()
-    elif isContain(stringInput, ["abre visual studio code", "abre vscode", "abre el code", "visual studio code", "vscode", "code", "visual studio"], debug=True):
+    elif isContain(stringInput, ["abre visual studio code", "abre vscode", "abre el code", "visual studio code", "vscode", "code", "visual studio"], debug=False):
         speak("Abriendo Visual Studio Code.")
         openVSCode()
+    elif isContain(stringInput, ["busca en google", "busca en internet", "haz una búsqueda", "búscalo en google", "búscalo en internet", "google"], debug=True):
+        speak("¿Qué quieres que busque en Google?")
+        query = listenToText()
+        if query:
+            speak(f"Buscando {query} en Google.")
+            searchOnGoogle(query)
+        else:
+            speak("No he entendido tu solicitud de búsqueda.")
     else:
         speak("Lo siento, no he entendido tu solicitud.")
 
