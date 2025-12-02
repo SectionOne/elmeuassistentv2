@@ -56,3 +56,15 @@ def getRandomJoke():
         response["answer"] = data.get('delivery', '')
 
     return response
+
+def getLlumOff():
+    response = {}
+    headers = { 'Accept': 'application/json'}
+    response = requests.get("https://tuya.mipconline.es/index.php?status=off", headers=headers)
+    return response
+
+def getLlumOn():
+    response = {}
+    headers = { 'Accept': 'application/json'}
+    response = requests.get("https://tuya.mipconline.es/index.php?status=on", headers=headers)
+    return response

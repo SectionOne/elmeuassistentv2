@@ -6,7 +6,7 @@ import pyttsx3
 import re
 from datetime import datetime
 from functions.os_ops import openCalculator, openDiscord, openVSCode
-from functions.online_ops import searchOnGoogle, playOnYouTube, sendWhatsAppMessage, getRandomJoke
+from functions.online_ops import searchOnGoogle, playOnYouTube, sendWhatsAppMessage, getRandomJoke, getLlumOff, getLlumOn
 
 USERNAME = "Usuario"
 BOTNAME = "laura"
@@ -175,7 +175,7 @@ def actions(stringInput):
             sendWhatsAppMessage(number, message)
         else:
             speak("No he entendido el número o el mensaje.")
-    elif isContain(stringInput, ["cuéntame un chiste", "dime un chiste", "quiero oír un chiste", "chiste"], debug=True):
+    elif isContain(stringInput, ["cuéntame un chiste", "dime un chiste", "quiero oír un chiste", "chiste"], debug=False):
         joke = getRandomJoke()
         if joke["error"] == "":
             speak("Aquí tienes un chiste.")
@@ -185,6 +185,18 @@ def actions(stringInput):
             speak("Ja Ja Ja")
         else:
             speak(joke["error"])
+    elif isContain(stringInput, ["enciende la luz", "prende la luz", "sube la luz", "luz on", "luz encendida", "enciende luz"], debug=True):
+        response = getLlumOn()
+        if response.status_code == 200:
+            speak("La luz se ha encendido.")
+        else:
+            speak("No he podido encender la luz.")
+    elif isContain(stringInput, ["apaga la luz", "baja la luz", "luz off", "luz apagada", "apaga luz"], debug=True):
+        response = getLlumOff()
+        if response.status_code == 200:
+            speak("La luz se ha apagado.")
+        else:
+            speak("No he podido apagar la luz.")
     else:
         speak("Lo siento, no he entendido tu solicitud.")
 
