@@ -177,11 +177,14 @@ def actions(stringInput):
             speak("No he entendido el número o el mensaje.")
     elif isContain(stringInput, ["cuéntame un chiste", "dime un chiste", "quiero oír un chiste", "chiste"], debug=True):
         joke = getRandomJoke()
-        speak("Aquí tienes un chiste.")
-        speak(joke["joke"])
-        if joke["answer"]:
-            speak(joke["answer"])
-        speak("Ja Ja Ja")
+        if joke["error"] == "":
+            speak("Aquí tienes un chiste.")
+            speak(joke["joke"])
+            if joke["answer"]:
+                speak(joke["answer"])
+            speak("Ja Ja Ja")
+        else:
+            speak(joke["error"])
     else:
         speak("Lo siento, no he entendido tu solicitud.")
 
