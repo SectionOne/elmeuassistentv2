@@ -8,9 +8,13 @@ from datetime import datetime
 
 USERNAME = "Usuario"
 BOTNAME = "laura"
-inactivity = 0
-greet = False
-dialog = False
+# Usar un diccionario para mantener el estado de variables mutables
+state = {
+    'inactivity': 0,
+    'greet': False,
+    'dialog': False
+}
+inactivityMax = 2 # Nombre de cicles d'inactivitat abans de despedir-se
 
 # Inicialitzar el motor de síntesi de veu
 engine = pyttsx3.init('sapi5')
@@ -47,7 +51,6 @@ def listen():
         
 def greet_user():
     """Funció per saludar l'usuari segons l'hora del dia"""
-    global greet  # Accedir a la variable global greet
     hour = datetime.now().hour
     if 0 <= hour < 12:
         speak(f"Buenos días {USERNAME}")
@@ -56,19 +59,18 @@ def greet_user():
     else:
         speak(f"Buenas noches {USERNAME}")
     speak(f"Soy {BOTNAME}, tu asistente virtual. ¿En qué puedo ayudarte hoy?")
-    greet = True
+    state['greet'] = True
 
 def byeBye():
     """Funció per acomiadar-se de l'usuari"""
-    global greet,dialog
     hour = datetime.now().hour
     if hour >= 21 or hour < 6:
         speak(f"Buenas noches {USERNAME}, que descanses.")
     else:
         speak(f"Adiós {USERNAME}, hasta luego.")
         print(hour)
-    greet = False
-    dialog = False
+    state['greet'] = False
+    state['dialog'] = False
 
 def listenToText():
     """Funció per convertir l'audio reconegut a text i extreure només el text"""
@@ -117,17 +119,16 @@ def isContain(textInput, seeds, debug=False):
 
 # Sequencia d'entrada en conversació
 def inDialog():
-    global dialog
     stringInput = listenToText()  # Escoltar i obtenir el text reconegut
     if isContain(stringInput, ["hola " + BOTNAME, "ayudame " + BOTNAME, BOTNAME], debug=False):
-        dialog = True  # Iniciar conversació
+        state['dialog'] = True  # Iniciar conversació
 
 # Programa principal
 while True:
     #Control de si s'ha iniciat conversació o no
-    if dialog:
+    if state['dialog']:
         # Validació de la salutació
-        if inactivity == 0 and not greet: greet_user()  # Saludar l'usuari si no s'ha fet encara
+        if state['inactivity'] == 0 and not state['greet']: greet_user()  # Saludar l'usuari si no s'ha fet encara
         stringInput = listenToText()  # Escolta el text reconegut
 
         if isContain(stringInput, ["adiós","adiós " + BOTNAME, "hasta luego", "hasta luego " + BOTNAME, "gracias " + BOTNAME, "para " + BOTNAME], debug=False):
@@ -135,8 +136,11 @@ while True:
             continue # Situarem el continue per tornar a la següent iteració del bucle principal
         else:
             # Procés de despedida per inactivitat
-            inactivity += 1  # Incrementar el comptador d'inactivitat
-        print("Fi de cicle")  # Missatge de despedida
+            if state['inactivity'] < inactivityMax:
+                state['inactivity'] += 1  # Incrementar el comptador d'inactivitat
+            else:
+                state['inactivity'] = 0  # Reiniciar el comptador d'inactivitat
+        print("Fi de cicle", state['inactivity'])  # Missatge de despedida
     else:
         print("In StandBy")
         inDialog()  # Esperar a que s'iniciï la conversa
