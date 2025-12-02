@@ -130,10 +130,12 @@ while True:
         if inactivity == 0 and not greet: greet_user()  # Saludar l'usuari si no s'ha fet encara
         stringInput = listenToText()  # Escolta el text reconegut
 
-        if isContain(stringInput, ["adiós","adiós " + BOTNAME, "hasta luego", "hasta luego " + BOTNAME, "gracias " + BOTNAME, "para " + BOTNAME], debug=True):
-            print("Fi de conversa per comanda de l'usuari")
+        if isContain(stringInput, ["adiós","adiós " + BOTNAME, "hasta luego", "hasta luego " + BOTNAME, "gracias " + BOTNAME, "para " + BOTNAME], debug=False):
             byeBye()  # Acomiadar-se de l'usuari
             continue # Situarem el continue per tornar a la següent iteració del bucle principal
+        else:
+            # Procés de despedida per inactivitat
+            inactivity += 1  # Incrementar el comptador d'inactivitat
         print("Fi de cicle")  # Missatge de despedida
     else:
         print("In StandBy")
