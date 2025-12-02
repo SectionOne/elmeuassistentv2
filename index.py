@@ -6,7 +6,7 @@ import pyttsx3
 import re
 from datetime import datetime
 from functions.os_ops import openCalculator, openDiscord, openVSCode
-from functions.online_ops import searchOnGoogle, playOnYouTube
+from functions.online_ops import searchOnGoogle, playOnYouTube, sendWhatsAppMessage
 
 USERNAME = "Usuario"
 BOTNAME = "laura"
@@ -157,7 +157,7 @@ def actions(stringInput):
             searchOnGoogle(query)
         else:
             speak("No he entendido tu solicitud de búsqueda.")
-    elif isContain(stringInput, ["reproduce en youtube", "pon un video en youtube", "busca un video en youtube", "youtube"], debug=True):
+    elif isContain(stringInput, ["reproduce en youtube", "pon un video en youtube", "busca un video en youtube", "youtube"], debug=False):
         speak("¿Qué video quieres que reproduzca en YouTube?")
         video_name = listenToText()
         if video_name:
@@ -165,6 +165,16 @@ def actions(stringInput):
             playOnYouTube(video_name)
         else:
             speak("No he entendido tu solicitud de video.")
+    elif isContain(stringInput, ["envía un mensaje de whatsapp", "manda un whatsapp", "envía un whatsapp", "whatsapp"], debug=True):
+        speak("¿A qué número quieres enviar el mensaje?")
+        number = listenToText()
+        speak("¿Cuál es el mensaje que quieres enviar?")
+        message = listenToText()
+        if number and message:
+            speak(f"Enviando mensaje a {number} por WhatsApp.")
+            sendWhatsAppMessage(number, message)
+        else:
+            speak("No he entendido el número o el mensaje.")
     else:
         speak("Lo siento, no he entendido tu solicitud.")
 
