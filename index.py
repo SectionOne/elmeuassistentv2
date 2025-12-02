@@ -125,8 +125,15 @@ def inDialog():
 
 # Sequencia de sortida de la conversació
 def outDialog():
-    speak(f"Encantada de haberte ayudado. Si necesitas algo más, solo tienes que llamarme {BOTNAME}.")
-    byeBye()
+    speak("Deseas que te ayude en algo más?")
+    stringInput = listenToText()  # Escoltar el text reconegut
+    if isContain(stringInput, ["si", "sí", "claro", "por favor"], debug=False):
+        speak("¿En qué más puedo ayudarte?")
+        state['dialog'] = True  # Mantenir la conversa
+        state['inactivity'] = 0  # Reiniciar el comptador d'inactivitat
+    else:
+        speak(f"Encantada de haberte ayudado. Si necesitas algo más, solo tienes que llamarme {BOTNAME}.")
+        byeBye()
 
 # Programa principal
 while True:
