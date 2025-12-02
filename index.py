@@ -6,7 +6,7 @@ import pyttsx3
 import re
 from datetime import datetime
 from functions.os_ops import openCalculator, openDiscord, openVSCode
-from functions.online_ops import searchOnGoogle, playOnYouTube, sendWhatsAppMessage
+from functions.online_ops import searchOnGoogle, playOnYouTube, sendWhatsAppMessage, getRandomJoke
 
 USERNAME = "Usuario"
 BOTNAME = "laura"
@@ -165,7 +165,7 @@ def actions(stringInput):
             playOnYouTube(video_name)
         else:
             speak("No he entendido tu solicitud de video.")
-    elif isContain(stringInput, ["envía un mensaje de whatsapp", "manda un whatsapp", "envía un whatsapp", "whatsapp"], debug=True):
+    elif isContain(stringInput, ["envía un mensaje de whatsapp", "manda un whatsapp", "envía un whatsapp", "whatsapp"], debug=False):
         speak("¿A qué número quieres enviar el mensaje?")
         number = listenToText()
         speak("¿Cuál es el mensaje que quieres enviar?")
@@ -175,6 +175,13 @@ def actions(stringInput):
             sendWhatsAppMessage(number, message)
         else:
             speak("No he entendido el número o el mensaje.")
+    elif isContain(stringInput, ["cuéntame un chiste", "dime un chiste", "quiero oír un chiste", "chiste"], debug=True):
+        joke = getRandomJoke()
+        speak("Aquí tienes un chiste.")
+        speak(joke["joke"])
+        if joke["answer"]:
+            speak(joke["answer"])
+        speak("Ja Ja Ja")
     else:
         speak("Lo siento, no he entendido tu solicitud.")
 
