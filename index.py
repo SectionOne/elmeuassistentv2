@@ -8,8 +8,10 @@ import pyttsx3
 engine = pyttsx3.init('sapi5')
 engine.setProperty('rate', 120)  # Velocitat de la parla
 engine.setProperty('voice', 'spanish')  # Idioma: espanyol
-engine.say("Hola buenos dias. En que te puedo ayudar?")  # Missatge inicial
-engine.runAndWait()  # Esperar a que acabi de parlar
+
+def speak(text):
+    engine.say(text)  # Missatge personalitzat
+    engine.runAndWait()  # Esperar a que acabi de parlar
 
 def listen():
     """Funció per escoltar audio del micròfon i reconèixer la parla amb VOSK"""
@@ -45,5 +47,6 @@ def listenToText():
 
 
 # Programa principal
+speak("Hola buenos dias. Enque te puedo ayudar?")  # Missatge de benvinguda
 print("Resultat:", listenToText())  # Escolta i mostra el text reconegut
 print("Hola Clase que tal?")  # Missatge de despedida
