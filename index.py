@@ -68,7 +68,6 @@ def byeBye():
         speak(f"Buenas noches {USERNAME}, que descanses.")
     else:
         speak(f"Adiós {USERNAME}, hasta luego.")
-        print(hour)
     state['greet'] = False
     state['dialog'] = False
 
@@ -135,6 +134,13 @@ def outDialog():
         speak(f"Encantada de haberte ayudado. Si necesitas algo más, solo tienes que llamarme {BOTNAME}.")
         byeBye()
 
+def actions(stringInput):
+    if isContain(stringInput, ["prueba", "test", "evaluación"], debug=False):
+        speak("Esta es una prueba de funcionamiento.")
+        outDialog()
+    else:
+        speak("Lo siento, no he entendido tu solicitud.")
+
 # Programa principal
 # Afegim el try-except per capturar errors inesperats com que l'usuari faci Ctrl+C
 try:
@@ -150,9 +156,13 @@ try:
                 continue # Situarem el continue per tornar a la següent iteració del bucle principal
             else:
                 # Procés de despedida per inactivitat
-                if state['inactivity'] < inactivityMax:
+                if(state['inactivity'] < inactivityMax and stringInput == ""):
                     speak("¿En qué más puedo ayudarte?")
                     state['inactivity'] += 1  # Incrementar el comptador d'inactivitat
+                elif stringInput != "":
+                    print("En breve gestiono tu petición") # Missatge de processament
+                    actions(stringInput)  # Realitzar accions segons el text reconegut
+                    state['inactivity'] = 0  # Reiniciar el comptador d'inactivitat
                 else:
                     outDialog()  # Sortir de la conversa per inactivitat
                     state['inactivity'] = 0  # Reiniciar el comptador d'inactivitat
