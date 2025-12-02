@@ -136,25 +136,29 @@ def outDialog():
         byeBye()
 
 # Programa principal
-while True:
-    #Control de si s'ha iniciat conversació o no
-    if state['dialog']:
-        # Validació de la salutació
-        if state['inactivity'] == 0 and not state['greet']: greet_user()  # Saludar l'usuari si no s'ha fet encara
-        stringInput = listenToText()  # Escolta el text reconegut
+# Afegim el try-except per capturar errors inesperats com que l'usuari faci Ctrl+C
+try:
+    while True:
+        #Control de si s'ha iniciat conversació o no
+        if state['dialog']:
+            # Validació de la salutació
+            if state['inactivity'] == 0 and not state['greet']: greet_user()  # Saludar l'usuari si no s'ha fet encara
+            stringInput = listenToText()  # Escolta el text reconegut
 
-        if isContain(stringInput, ["adiós","adiós " + BOTNAME, "hasta luego", "hasta luego " + BOTNAME, "gracias " + BOTNAME, "para " + BOTNAME], debug=False):
-            byeBye()  # Acomiadar-se de l'usuari
-            continue # Situarem el continue per tornar a la següent iteració del bucle principal
-        else:
-            # Procés de despedida per inactivitat
-            if state['inactivity'] < inactivityMax:
-                speak("¿En qué más puedo ayudarte?")
-                state['inactivity'] += 1  # Incrementar el comptador d'inactivitat
+            if isContain(stringInput, ["adiós","adiós " + BOTNAME, "hasta luego", "hasta luego " + BOTNAME, "gracias " + BOTNAME, "para " + BOTNAME], debug=False):
+                byeBye()  # Acomiadar-se de l'usuari
+                continue # Situarem el continue per tornar a la següent iteració del bucle principal
             else:
-                outDialog()  # Sortir de la conversa per inactivitat
-                state['inactivity'] = 0  # Reiniciar el comptador d'inactivitat
-        print("Fi de cicle", state['inactivity'])  # Missatge de despedida
-    else:
-        print("In StandBy")
-        inDialog()  # Esperar a que s'iniciï la conversa
+                # Procés de despedida per inactivitat
+                if state['inactivity'] < inactivityMax:
+                    speak("¿En qué más puedo ayudarte?")
+                    state['inactivity'] += 1  # Incrementar el comptador d'inactivitat
+                else:
+                    outDialog()  # Sortir de la conversa per inactivitat
+                    state['inactivity'] = 0  # Reiniciar el comptador d'inactivitat
+            print("Fi de cicle", state['inactivity'])  # Missatge de despedida
+        else:
+            print("In StandBy")
+            inDialog()  # Esperar a que s'iniciï la conversa
+except KeyboardInterrupt:
+    byeBye()  # Acomiadar-se de l'usuari en cas d'interrupció
