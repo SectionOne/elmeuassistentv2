@@ -5,7 +5,7 @@ import vosk
 import pyttsx3
 import re
 from datetime import datetime
-from functions.os_ops import openCalculator
+from functions.os_ops import openCalculator, openDiscord
 
 USERNAME = "Usuario"
 BOTNAME = "laura"
@@ -139,9 +139,12 @@ def actions(stringInput):
     if isContain(stringInput, ["prueba", "test", "evaluación"], debug=False):
         speak("Esta es una prueba de funcionamiento.")
         outDialog()
-    elif isContain(stringInput, ["abre la calculadora", "abre calculadora", "abre la calculadora por favor", "calculadora"], debug=True):
+    elif isContain(stringInput, ["abre la calculadora", "abre calculadora", "abre la calculadora por favor", "calculadora"], debug=False):
         speak("Abriendo la calculadora.")
         openCalculator()
+    elif isContain(stringInput, ["abre discord", "abre el discord", "abre discord por favor", "discord"], debug=True):
+        speak("Abriendo Discord.")
+        openDiscord()
     else:
         speak("Lo siento, no he entendido tu solicitud.")
 
